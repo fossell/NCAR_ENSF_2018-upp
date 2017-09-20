@@ -285,7 +285,11 @@ C           PRINT *,' W3FI72 ERROR, IBLEN .NE. NPTS = ',IBLEN,NPTS
           ELSE
              NLEFT  = 0
           END IF
-          NUMBMS = 6 + (IBLEN+NLEFT) / 8
+C          NUMBMS = 6 + (IBLEN+NLEFT) / 8
+C  increase the size of this array - the bit-packing routines add more
+C  padding (zero) values and go past 6
+C  6 bytes for the header, and up to 2 bytes of "fill"
+          NUMBMS = 8 + (IBLEN+NLEFT) / 8
           ALLOCATE(BMS(NUMBMS))
           ZERO = CHAR(00)
           BMS = ZERO

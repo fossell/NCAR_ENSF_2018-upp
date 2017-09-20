@@ -886,6 +886,9 @@
            IF (IHR.LT.100) THEN
              WRITE(DESCR2,1012) IHR
              FNAME = DATSET(1:KDAT) // DESCR2(1:2)  //'.'// RESTHR
+           ELSEIF (IHR.GE.1000) THEN
+             WRITE(DESCR2,1016) IHR
+             FNAME = DATSET(1:KDAT) // DESCR2(1:4)  //'.'// RESTHR
            ELSE
              WRITE(DESCR2,1014) IHR
              FNAME = DATSET(1:KDAT) // DESCR2(1:3)  //'.'// RESTHR
@@ -910,6 +913,7 @@
                     //'.'// RESTHR
  1012        FORMAT(I2.2)
  1014        FORMAT(I3.3)
+ 1016        FORMAT(I4.4)
            ELSE
              WRITE(DESCR2,1014) IHR
              FNAME = ENVAR(1:KENV) // DATSET(1:KDAT) // DESCR2(1:3) &
