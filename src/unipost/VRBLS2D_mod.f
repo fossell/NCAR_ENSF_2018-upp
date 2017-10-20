@@ -50,6 +50,8 @@
       ,SWNORMmean(:,:),SNFDEN(:,:),SNDEPAC(:,:),SWDDNI(:,:),SWDDIF(:,:)      &
 ! afwa hourly snow
       ,AFWA_SNOWFALL_HRLY(:,:) &
+!G.Thompson hail
+      ,HAIL_MAXK1(:,:),HAIL_MAX2D(:,:) &
 ! afwa hailcast
       ,HAILCAST_DIAM_STD(:,:) &
       ,HAILCAST_DIAM_MEAN(:,:) &
