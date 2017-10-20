@@ -1,5 +1,5 @@
       SUBROUTINE CALCAPE(ITYPE,DPBND,P1D,T1D,Q1D,L1D,CAPE,    &  
-                         CINS,PPARC,ZEQL,THUND)
+                         CINS,PPARC,ZEQL,THUND,BMIN,PBMIN)
 !$$$  SUBPROGRAM DOCUMENTATION BLOCK
 !                .      .    .     
 ! SUBPROGRAM:    CALCAPE     COMPUTES CAPE AND CINS
@@ -101,6 +101,9 @@
 !     CINS     - CONVECTIVE INHIBITION (J/KG)
 !     PPARC    - PRESSURE LEVEL OF PARCEL LIFTED WHEN ONE SEARCHES
 !                  OVER A PARTICULAR DEPTH TO COMPUTE CAPE/CIN
+!     BMIN     - MINIMUM BUOYANCY OF PARCEL BETWEEN LCL AND EL
+!                USE 50000 Pa IF EL DOESN'T EXIST (K).
+!     PBMIN    - PRESS AT BMIN (Pa)
 !     
 !   OUTPUT FILES:
 !     STDOUT  - RUN TIME STANDARD OUT.
@@ -132,7 +135,7 @@
       implicit none
 !     
 !     INCLUDE/SET PARAMETERS.  CONSTANTS ARE FROM BOLTON (MWR, 1980).
-      real,PARAMETER :: ISMTHP=2,ISMTHT=2,ISMTHQ=2
+      real,PARAMETER :: ISMTHP=2,ISMTHT=2,ISMTHQ=2,PBMIN_TOP=50000.
 !     
 !     DECLARE VARIABLES.
 !
@@ -141,6 +144,8 @@
       integer, dimension(IM,Jsta:jend),intent(in)    :: L1D
       real,    dimension(IM,Jsta:jend),intent(in)    :: P1D,T1D
       real,    dimension(IM,jsta:jend),intent(inout) :: Q1D,CAPE,CINS,PPARC,ZEQL
+      real,dimension(IM,jsta:jend),intent(inout) :: BMIN,PBMIN
+
 !     
       integer, dimension(im,jsta:jend) :: IEQL, IPTB, ITHTB, PARCEL, KLRES, KHRES, LCL, IDX
 !     
@@ -194,6 +199,8 @@
           PSP(I,J)     = D00
           PPARC(I,J)   = D00
           THUNDER(I,J) = .TRUE.
+          BMIN(I,J) = D00
+          PBMIN(I,J) = D00
         ENDDO
       ENDDO
 !
@@ -451,7 +458,14 @@
               TV     = T(I,J,L)*(1+0.608*Q(I,J,L)) 
               THETAA = TV*(H10E5/PRESK)**CAPA
               IF(THETAP < THETAA) THEN
-                CINS(I,J) = CINS(I,J) + (LOG(THETAP)-LOG(THETAA))*GDZKL
+              IF (L.GE.IEQL(I,J))THEN
+                 CINS(I,J)=CINS(I,J)                                &
+                           +(ALOG(THETAP)-ALOG(THETAA))*GDZKL
+              ENDIF
+              IF(PRESK.GT.PBMIN_TOP)THEN
+                   BMIN(I,J) = MIN(BMIN(I,J),THETAP-THETAA)
+                   PBMIN(I,J) = PRESK
+              ENDIF
               ELSEIF(THETAP > THETAA) THEN
                 CAPE(I,J) = CAPE(I,J) + (LOG(THETAP)-LOG(THETAA))*GDZKL
                 IF (THUNDER(I,J) .AND. T(I,J,L)  < 273.15                 &
