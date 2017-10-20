@@ -1,3 +1,16 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
       SUBROUTINE INITPOST_GFS_SIGIO(lusig,iunit,iostatusFlux,iostatusD3D,idrt,sighead)
 !$$$  SUBPROGRAM DOCUMENTATION BLOCK
 !                .      .    .     
@@ -527,17 +540,13 @@
 !     write(0,*)'bf allocate '
 
 ! set threads for rest of the code
-      call getenv('POST_THREADS',ENVAR)
-      read(ENVAR, '(I2)')idum
-      idum = max(idum+0,1)
+!     call getenv('POST_THREADS',ENVAR)
+!     read(ENVAR, '(I2)')idum
+!     idum = max(idum+0,1)
 !     write(0,*)' post_threads=', idum
-      if (idum > 0 .and. idum <= 32) then
-
-
-
-      
-
-      endif
+!     if (idum > 0 .and. idum <= 32) then
+!     
+!     endif
 
 ! scatter to pes  
       allocate(dummy15(im,jsta_2l:jend_2u),                                 &
