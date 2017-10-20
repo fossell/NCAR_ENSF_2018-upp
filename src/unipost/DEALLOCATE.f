@@ -447,5 +447,6 @@
       deallocate(acswupt)
       deallocate(swdnt)
       deallocate(acswdnt)
+      deallocate(AFWA_SNOWFALL_HRLY)
       
       end

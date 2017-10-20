@@ -454,5 +454,8 @@
       allocate(acswupt(im,jsta_2l:jend_2u))
       allocate(swdnt(im,jsta_2l:jend_2u))
       allocate(acswdnt(im,jsta_2l:jend_2u))
+
+      allocate(AFWA_SNOWFALL_HRLY(im,jsta_2l:jend_2u))
+
 ! 
       end
